@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.recipebook.app.ui.screens.AddRecipeScreen
+import com.recipebook.app.ui.screens.EditRecipeScreen
 import com.recipebook.app.ui.screens.HomeScreen
 import com.recipebook.app.ui.screens.LoginScreen
 import com.recipebook.app.ui.screens.ProfileScreen
@@ -16,6 +18,9 @@ sealed class Screen(val route: String) {
     data object Home : Screen("home")
     data object Profile : Screen("profile")
     data object AddRecipe : Screen("add_recipe")
+    data object EditRecipe : Screen("edit_recipe/{recipeId}") {
+        fun createRoute(recipeId: String) = "edit_recipe/$recipeId"
+    }
     data object RecipeDetail : Screen("recipe_detail/{recipeId}") {
         fun createRoute(recipeId: String) = "recipe_detail/$recipeId"
     }
@@ -73,7 +78,20 @@ fun RecipeBookNavGraph(
             ProfileScreen()
         }
         composable(Screen.AddRecipe.route) {
-            // Placeholder for AddRecipeScreen
+            AddRecipeScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(Screen.EditRecipe.route) { backStackEntry ->
+            val recipeId = backStackEntry.arguments?.getString("recipeId") ?: ""
+            EditRecipeScreen(
+                recipeId = recipeId,
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
         }
         composable(Screen.RecipeDetail.route) { backStackEntry ->
             val recipeId = backStackEntry.arguments?.getString("recipeId") ?: ""
