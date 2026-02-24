@@ -15,6 +15,7 @@ sealed class Screen(val route: String) {
     data object Register : Screen("register")
     data object Home : Screen("home")
     data object Profile : Screen("profile")
+    data object AddRecipe : Screen("add_recipe")
     data object RecipeDetail : Screen("recipe_detail/{recipeId}") {
         fun createRoute(recipeId: String) = "recipe_detail/$recipeId"
     }
@@ -59,11 +60,20 @@ fun RecipeBookNavGraph(
             HomeScreen(
                 onRecipeClick = { recipeId ->
                     navController.navigate(Screen.RecipeDetail.createRoute(recipeId))
+                },
+                onNavigateToProfile = {
+                    navController.navigate(Screen.Profile.route)
+                },
+                onNavigateToAddRecipe = {
+                    navController.navigate(Screen.AddRecipe.route)
                 }
             )
         }
         composable(Screen.Profile.route) {
             ProfileScreen()
+        }
+        composable(Screen.AddRecipe.route) {
+            // Placeholder for AddRecipeScreen
         }
         composable(Screen.RecipeDetail.route) { backStackEntry ->
             val recipeId = backStackEntry.arguments?.getString("recipeId") ?: ""
