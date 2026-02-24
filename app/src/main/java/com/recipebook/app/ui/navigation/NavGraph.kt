@@ -75,7 +75,16 @@ fun RecipeBookNavGraph(
             )
         }
         composable(Screen.Profile.route) {
-            ProfileScreen()
+            ProfileScreen(
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
+                    }
+                },
+                onNavigateToEditRecipe = { recipeId ->
+                    navController.navigate(Screen.EditRecipe.createRoute(recipeId))
+                }
+            )
         }
         composable(Screen.AddRecipe.route) {
             AddRecipeScreen(

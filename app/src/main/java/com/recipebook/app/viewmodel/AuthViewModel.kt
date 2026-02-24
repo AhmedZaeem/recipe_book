@@ -22,7 +22,7 @@ class AuthViewModel : ViewModel() {
     fun login(email: String, pass: String) {
         viewModelScope.launch {
             _uiState.value = AuthUiState.Loading
-            delay(1500) // Simulate network delay
+            delay(1500)
             if (email.isNotBlank() && pass.isNotBlank()) {
                 _uiState.value = AuthUiState.Success
             } else {
@@ -34,7 +34,7 @@ class AuthViewModel : ViewModel() {
     fun register(name: String, email: String, pass: String, country: String) {
         viewModelScope.launch {
             _uiState.value = AuthUiState.Loading
-            delay(2000) // Simulate network delay
+            delay(2000)
             if (name.isNotBlank() && email.isNotBlank() && pass.isNotBlank() && country.isNotBlank()) {
                 _uiState.value = AuthUiState.Success
             } else {

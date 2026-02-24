@@ -89,9 +89,8 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // App Logo Placeholder (using Icon for now as we don't have assets)
             Icon(
-                imageVector = Icons.Default.Email, // Placeholder icon
+                imageVector = Icons.Default.Email,
                 contentDescription = "App Logo",
                 modifier = Modifier.size(80.dp),
                 tint = MaterialTheme.colorScheme.primary

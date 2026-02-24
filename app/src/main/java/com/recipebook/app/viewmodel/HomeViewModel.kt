@@ -22,7 +22,6 @@ class HomeViewModel : ViewModel() {
     val categories = listOf("All", "Breakfast", "Lunch", "Dinner", "Dessert", "Snack", "Vegan", "Keto")
 
     init {
-        // Mock Data
         _allRecipes.value = listOf(
             Recipe(id = "1", title = "Pancakes", category = "Breakfast", imageUrl = "https://example.com/pancakes.jpg"),
             Recipe(id = "2", title = "Chicken Salad", category = "Lunch", imageUrl = "https://example.com/salad.jpg"),

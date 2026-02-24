@@ -106,7 +106,7 @@ fun RegisterScreen(
                     .size(100.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .clickable { /* TODO: Implement Image Picker */ },
+                    .clickable {  },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(

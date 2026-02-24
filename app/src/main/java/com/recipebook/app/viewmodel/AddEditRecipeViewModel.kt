@@ -42,12 +42,9 @@ class AddEditRecipeViewModel : ViewModel() {
     val categories = listOf("Breakfast", "Lunch", "Dinner", "Dessert", "Snack", "Vegan", "Keto")
 
     fun loadRecipe(recipeId: String) {
-        // Simulate loading from repository
         viewModelScope.launch {
-            // Mock data fetch
             if (recipeId.isNotEmpty()) {
                 currentRecipeId = recipeId
-                // Mock existing recipe
                 _title.value = "Mock Recipe Title"
                 _ingredients.value = "Flour, Sugar, Eggs"
                 _steps.value = "1. Mix ingredients\n2. Bake"
@@ -67,17 +64,15 @@ class AddEditRecipeViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = AddEditUiState.Loading
             
-            // Basic Validation
             if (_title.value.isBlank() || _ingredients.value.isBlank() || _steps.value.isBlank() || _category.value.isBlank()) {
                 _uiState.value = AddEditUiState.Error("Please fill all required fields")
                 return@launch
             }
 
-            // Simulate Network Call
             kotlinx.coroutines.delay(1000)
             
             val ingredientsList = _ingredients.value.split(",").map { it.trim() }.filter { it.isNotEmpty() }
-            val stepsList = _steps.value.split(",").map { it.trim() }.filter { it.isNotEmpty() } // Or split by newline if preferred, user said comma
+            val stepsList = _steps.value.split(",").map { it.trim() }.filter { it.isNotEmpty() }
 
             val recipe = Recipe(
                 id = currentRecipeId ?: UUID.randomUUID().toString(),
@@ -88,7 +83,6 @@ class AddEditRecipeViewModel : ViewModel() {
                 videoUrl = _videoUrl.value
             )
 
-            // Save to repo (mock)
             _uiState.value = AddEditUiState.Success
         }
     }
