@@ -1,43 +1,25 @@
 package cloud.azaeem.recipe.ui.screens
 
 import android.widget.Toast
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.VideoLibrary
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cloud.azaeem.recipe.viewmodel.AddEditRecipeViewModel
 import cloud.azaeem.recipe.viewmodel.AddEditUiState
@@ -70,7 +52,7 @@ fun RecipeForm(
 
     LaunchedEffect(uiState) {
         if (uiState is AddEditUiState.Success) {
-            Toast.makeText(context, "Recipe saved successfully!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Success!", Toast.LENGTH_SHORT).show()
             viewModel.resetState()
             onNavigateBack()
         }
@@ -80,14 +62,25 @@ fun RecipeForm(
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text(screenTitle) },
+                title = { 
+                    Text(
+                        screenTitle.uppercase(), 
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Black,
+                        letterSpacing = 2.sp
+                    ) 
+                },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = null)
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                )
             )
         }
     ) { paddingValues ->
@@ -95,20 +88,26 @@ fun RecipeForm(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
                 .verticalScroll(rememberScrollState())
+                .padding(24.dp)
         ) {
-            OutlinedTextField(
-                value = title,
-                onValueChange = viewModel::onTitleChange,
-                label = { Text("Recipe Title") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+            Text(
+                text = "Recipe Details",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
             )
-            
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Category Dropdown
+            FormTextField(
+                value = title,
+                onValueChange = viewModel::onTitleChange,
+                label = "What's the name?",
+                icon = Icons.Default.Restaurant
+            )
+            
+            Spacer(modifier = Modifier.height(24.dp))
+
             ExposedDropdownMenuBox(
                 expanded = expanded,
                 onExpandedChange = { expanded = !expanded },
@@ -119,12 +118,19 @@ fun RecipeForm(
                     onValueChange = {},
                     readOnly = true,
                     label = { Text("Category") },
+                    leadingIcon = { Icon(Icons.Default.Category, contentDescription = null) },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    modifier = Modifier.menuAnchor().fillMaxWidth()
+                    modifier = Modifier.menuAnchor().fillMaxWidth(),
+                    shape = MaterialTheme.shapes.medium,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                    )
                 )
                 ExposedDropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false }
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.background(MaterialTheme.colorScheme.surface)
                 ) {
                     categories.forEach { selectionOption ->
                         DropdownMenuItem(
@@ -138,52 +144,102 @@ fun RecipeForm(
                 }
             }
 
+            Spacer(modifier = Modifier.height(32.dp))
+            Text(
+                text = "Ingredients & Steps",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
+            )
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
+            FormTextField(
                 value = ingredients,
                 onValueChange = viewModel::onIngredientsChange,
-                label = { Text("Ingredients (comma separated)") },
-                modifier = Modifier.fillMaxWidth(),
+                label = "Ingredients (use commas)",
+                icon = Icons.Default.Description,
+                singleLine = false,
                 minLines = 3
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = steps,
-                onValueChange = viewModel::onStepsChange,
-                label = { Text("Steps (comma separated)") },
-                modifier = Modifier.fillMaxWidth(),
-                minLines = 5
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = videoUrl,
-                onValueChange = viewModel::onVideoUrlChange,
-                label = { Text("Video URL (Optional)") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            FormTextField(
+                value = steps,
+                onValueChange = viewModel::onStepsChange,
+                label = "Instructions (use commas)",
+                icon = Icons.Default.Description,
+                singleLine = false,
+                minLines = 5
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+            Text(
+                text = "Media",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            FormTextField(
+                value = videoUrl,
+                onValueChange = viewModel::onVideoUrlChange,
+                label = "YouTube URL (Optional)",
+                icon = Icons.Default.VideoLibrary
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
+
             Button(
                 onClick = { viewModel.submitRecipe() },
-                modifier = Modifier.fillMaxWidth().height(50.dp),
-                enabled = uiState !is AddEditUiState.Loading
+                modifier = Modifier.fillMaxWidth().height(64.dp),
+                enabled = uiState !is AddEditUiState.Loading,
+                shape = MaterialTheme.shapes.large,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
             ) {
                 if (uiState is AddEditUiState.Loading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
-                        color = MaterialTheme.colorScheme.onPrimary
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        strokeWidth = 2.dp
                     )
                 } else {
-                    Text(if (recipeId == null) "Submit Recipe" else "Update Recipe")
+                    Text(
+                        if (recipeId == null) "CREATE RECIPE" else "UPDATE RECIPE",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
+}
+
+@Composable
+fun FormTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    singleLine: Boolean = true,
+    minLines: Int = 1
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        leadingIcon = { Icon(icon, contentDescription = null) },
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = singleLine,
+        minLines = minLines,
+        shape = MaterialTheme.shapes.medium,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline
+        )
+    )
 }

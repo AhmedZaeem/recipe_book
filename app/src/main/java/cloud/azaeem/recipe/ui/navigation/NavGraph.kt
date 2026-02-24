@@ -29,6 +29,7 @@ sealed class Screen(val route: String) {
 @Composable
 fun RecipeBookNavGraph(
     navController: NavHostController,
+    themeViewModel: cloud.azaeem.recipe.viewmodel.ThemeViewModel,
     startDestination: String = Screen.Login.route
 ) {
     NavHost(
@@ -76,6 +77,7 @@ fun RecipeBookNavGraph(
         }
         composable(Screen.Profile.route) {
             ProfileScreen(
+                onNavigateBack = { navController.popBackStack() },
                 onNavigateToLogin = {
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Home.route) { inclusive = true }
@@ -83,7 +85,8 @@ fun RecipeBookNavGraph(
                 },
                 onNavigateToEditRecipe = { recipeId ->
                     navController.navigate(Screen.EditRecipe.createRoute(recipeId))
-                }
+                },
+                themeViewModel = themeViewModel
             )
         }
         composable(Screen.AddRecipe.route) {
@@ -104,7 +107,11 @@ fun RecipeBookNavGraph(
         }
         composable(Screen.RecipeDetail.route) { backStackEntry ->
             val recipeId = backStackEntry.arguments?.getString("recipeId") ?: ""
-            RecipeDetailScreen(recipeId = recipeId)
+            RecipeDetailScreen(
+                recipeId = recipeId,
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToEdit = { id -> navController.navigate(Screen.EditRecipe.createRoute(id)) }
+            )
         }
     }
 }
