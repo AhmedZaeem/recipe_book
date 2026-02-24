@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.recipebook.app"
+    namespace = "cloud.azaeem.recipe"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.recipebook.app"
+        applicationId = "cloud.azaeem.recipe"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

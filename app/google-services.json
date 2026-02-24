@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "28932136842",
+    "project_id": "recipebook-46c92",
+    "storage_bucket": "recipebook-46c92.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:28932136842:android:3431bd37300a7da2c77273",
+        "android_client_info": {
+          "package_name": "cloud.azaeem.recipe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDC7kHPJwj5NRaW1BDenCkDvo3rBivAX-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
